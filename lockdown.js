@@ -145,7 +145,7 @@ exec('npm config get registry', function(err, stdout, stderr) {
     }
 
     var hash = crypto.createHash('sha1');
-    var pkgUrl = url.resolve(registry.href, req.url);
+    var pkgUrl = registry.href + req.url.substr(1);
 
     if (type === 'tarball') {
       npmClient.fetch(pkgUrl, { timeout: 2000 }, function(err, rres) {
