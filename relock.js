@@ -22,6 +22,7 @@ function findTmp () {
 }
 
 function relock (pkgsToLock) {
+  pkgsToLock = pkgsToLock || [];
   var packages = {};
   npmconf.load(function (err, conf) {
     if (err) {
@@ -34,12 +35,12 @@ function relock (pkgsToLock) {
       //console.log(data);
       if (data.dependencies) {
         Object.keys(data.dependencies).forEach(function (key) {
-          if (!pkgsToLock || pkgsToLock.indexOf(key) >= 0) {
+          if (pkgsToLock.length === 0 || pkgsToLock.indexOf(key) >= 0) {
             walk(cache, data.dependencies[key], packages);
           }
         });
       }
-      if (pkgsToLock) {
+      if (pkgsToLock.length > 0) {
         var currentPackages = JSON.parse(fs.readFileSync(path.join(cwd, 'lockdown.json')));
         packages = _.merge({}, currentPackages, packages);
       }
