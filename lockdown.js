@@ -149,12 +149,17 @@ exec('npm config get registry', function(err, stdout, stderr) {
 
     if (type === 'tarball') {
       npmClient.fetch(pkgUrl, { timeout: 2000 }, function(err, rres) {
-        rres.on('data', function(chunk) {
-          res.write(chunk);
-        });
-        rres.on('end', function() {
-          res.end();
-        });
+        if (err) {
+          console.log('ERROR fetching: ', pkgUrl);
+          throw err;
+        } else {
+          rres.on('data', function(chunk) {
+            res.write(chunk);
+          });
+          rres.on('end', function() {
+            res.end();
+          });
+        }
       });
     } else {
       npmClient.get(pkgUrl, { timeout: 2000 }, function(err, data, raw, rres) {
